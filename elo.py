@@ -58,3 +58,5 @@ def calculate_elo_scores(results_array):
 		else: 
 			dictionary[player_1], dictionary[player_2] = elo(score_1, score_2, match_result)
 
+	return dictionary
+
