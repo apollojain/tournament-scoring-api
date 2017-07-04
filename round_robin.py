@@ -6,7 +6,20 @@ def is_list(item):
 	else: 
 		return False
 
-def round_robin(players_list):
+def assemble_rounds(num, dictionary):
+	sides = dictionary["Sides"]
+	n = len(sides["Side A"])
+	cur_round = "Round " + str(num)
+	dictionary["Games"][cur_round] = {}
+	dictionary["Rounds"][cur_round] + {}
+	for i in range(n):
+		game = "Game " + str(i)
+		team_1 = sides["Side A"][i]
+		team_2 = sides["Side B"][i]
+		dictionaries["Rounds"][cur_round][game] = {}
+		dictionaries["Rounds"][cur_round][game][team_1] = {}
+		dictionaries["Rounds"][cur_round][game][team_2] = {}
+def round_robin(name, players_list):
 	n = len(players_list)
 	if n < 2: 
 		return 
@@ -14,14 +27,18 @@ def round_robin(players_list):
 		players_list = [item[0] for item in sorted(players_list, key=itemgetter(1))]	
 	players_list.reverse()
 	dictionary = {}
-	i = 0
-	while i < n - 2: 
-		dictionary[players_list[i]] = players_list[i + 2]
-		if i < n - 3:
-			dictionary[players_list[i + 1]] = players_list[i + 3]
-		i += 1
-	dictionary[players_list[n - 2]] = players_list[0]
-	dictionary[players_list[n - 1]] = players_list[1]
+	dictionary["name"] = name
+	dictionary["Games"] = {}
+	dictionary["Sides"] = {}
+	dictionary["Sides"]["Side A"] = []
+	dictionary["Sides"]["Side B"] = []
+	for i in range(n):
+		if i % 2: 
+			dictionary["Sides"]["Side A"].append(players_list[i])
+		else: 
+			dictionary["Sides"]["Side B"].append(players_list[i])
+	if len(dictionary["Sides"]["Side A"]) != len(dictionary["Side B"]):
+		dictionary["Sides"]["Side B"].append("Bye")
 	return dictionary
 
 def round_robin_elimination(winner, loser, dictionary):
