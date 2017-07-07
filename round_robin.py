@@ -9,11 +9,12 @@ def is_list(item):
 
 def switch_games(dictionary):
 	dictionary["Sides"]["Side A"].append(dictionary["Sides"]["Side A"].pop(0))
-
+	return dictionary
 def add_game_to_team(dictionary, team, round, game):
 	if team not in dictionary["Teams"]:
 		dictionary["Teams"][team] = {}
 	dictionary["Teams"][team][round] = game
+	return dictionary
 
 def assemble_rounds(dictionary):
 	sides = dictionary["Sides"]
@@ -26,13 +27,7 @@ def assemble_rounds(dictionary):
 			game = "Game " + str(i)
 			team_1 = sides["Side A"][i]
 			team_2 = sides["Side B"][i]
-			dictionary["Rounds"][cur_round][game] = {}
-			dictionary["Rounds"][cur_round][game][team_1] = {}
-			dictionary["Rounds"][cur_round][game][team_1]["Score"] = 0
-			dictionary["Rounds"][cur_round][game][team_1]["Result"] = "N"
-			dictionary["Rounds"][cur_round][game][team_2] = {}
-			dictionary["Rounds"][cur_round][game][team_2]["Score"] = 0
-			dictionary["Rounds"][cur_round][game][team_2]["Result"] = "N"
+			dictionary["Rounds"][cur_round][game] = helpers.make_empty_game(team_1, team_2)
 			add_game_to_team(dictionary, team_1, cur_round, game)
 			add_game_to_team(dictionary, team_2, cur_round, game)
 		switch_games(dictionary)
@@ -45,7 +40,6 @@ def round_robin(name, players_list, groups):
 
 	pools = [[] for i in range(groups)]
 	for j in range(n):
-		dictionary
 		pools[j % groups].append(players_list[j])
 	for k in range(groups):
 		dictionary["Pools"]["Pool " + str(k)] = round_robin_helper("Pool " + str(k), polls[k])
@@ -82,15 +76,20 @@ def try_next_round(dictionary):
 	for game in dictionary["Rounds"][cur_round]: 
 		for team in game: 
 			if dictionary["Rounds"][cur_round][game][team] == 'N': 
-				return 
+				return dictionary
 	switch_games(dictionary)
 	dictionary["Current Round"] += 1
+	return dictionary
 
-def determine_result(dictionary, round, a, b, a_to_b_result):
+def determine_result(dictionary, round, a, b, score_a, score_b, a_to_b_result):
 	game = dictionary["Teams"][a][round]
 	if game == dictionary["Teams"][b][round]: 
 		dictionary["Rounds"][round][game][a]["Result"] = a_to_b_result
+		dictionary["Rounds"][round][game][a]["Score"] = score_a
 		dictionary["Rounds"][round][game][b]["Result"] = helpers.opposite(a_to_b_result)
+		dictionary["Rounds"][round][game][b]["Score"] = score_b
+	try_next_round(dictionary)
+	return dictionary
 
 if __name__ == '__main__':
 	d0 = round_robin("Revenge of the Chickens", ["chicken", "duck", "squirrel"])
