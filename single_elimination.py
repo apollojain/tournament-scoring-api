@@ -16,7 +16,7 @@ def insert_into_dictionary(rounds_dictionary, player):
 	2. a round is there, but bye round -> transform bye round
 	3. we've run out of spots -> add new round, add new game, link old layer to hash of new game
 	'''
-	
+	return
 def find_first_empty_spot(cur_round_dictionary, max_round):
 	expected_games(max_round)
 	largest_game_index = max(cur_round_dictionary.keys())
@@ -34,7 +34,16 @@ def get_next_game(round, game):
 def modify_bye_game(bye_dictionary, team_2):
 	bye_dictionary.keys().remove("Bye")
 	other_team = bye_dictionary.keys()[0]
-	bye_dictionary[""]
+	bye_dictionary[other_team] = {
+		"Score": 0,
+		"Result": "N"
+	}
+	bye_dictionary[team_2] = {
+		"Score": 0,
+		"Result": "N"
+	}
+	return bye_dictionary
+
 def get_bye(player):
 	dictionary = {}
 	dictionary[player] = {}
